@@ -161,6 +161,22 @@ public:
 			enet_peer_send(enetPeer, 0, v3);
 		}
 	}
+	
+	void SendPacketNew(int type, uint8_t* data, int len)
+	{
+		auto packet = enet_packet_create(0, len + 5, ENET_PACKET_FLAG_RELIABLE);
+    auto game_packet = (gametextpacket_t*)packet->data;
+    game_packet->m_type = type;
+    if (data)
+        memcpy(&game_packet->m_data, data, len);
+
+    memset(&game_packet->m_data + len, 0, 1);
+    int code = enet_peer_send(peer, 0, packet);
+    if (code != 0)
+        PRINTS("Error sending packet! code: %d\n", code);
+    enet_host_flush(client);
+		
+	}
 
 	void SendPacketRaw(int a1, void *packetData, size_t packetDataSize, void *a4, ENetPeer *peer, int packetFlag)
 	{
