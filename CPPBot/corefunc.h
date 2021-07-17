@@ -24,6 +24,8 @@
 #include <vector>
 #include <time.h>
 #include "proton/variant.hpp"
+#include "packet.h"
+
 using namespace std;
 
 string SERVER_HOST = "213.179.209.168";
@@ -48,6 +50,10 @@ public:
 	/********** user sutff ***************/
 	int owner = -1;
 	string ownerUsername;
+	
+	int localx=-1;
+	int localy=-1;
+	int localnetid=-1;
 
 	struct ObjectData
 	{
@@ -395,7 +401,12 @@ public:
 	//ProcessTankUpdatePacket(0, NULL, tankUpdatePacket);
 	void ProcessTankUpdatePacket(float someVal, BYTE *structPointer)
 	{
-		switch (*(char *)structPointer)
+		
+		auto gamepacket = reinterpret_cast<gameupdatepacket_t*>(structPointer);
+		
+		
+		
+		switch (gamepacket->m_type)
 		{
 		case 1:
 		{
@@ -440,8 +451,7 @@ public:
 		}
 		case 0x16:
 		{
-			dbgPrint("We need to send packet raw response!");
-			// SendPacketRaw(4, &v205, 0x38u, 0, peer, 1);
+			 
 		}
 		break;
 		case 0x12:
@@ -451,20 +461,8 @@ public:
 		}
 		case 0x14:
 		{
-			// *(int*)(structPointer + 4) <-- NetID
-			// NetAvatar::SetCharacterState
-			dbgPrint("Set character state");
-			/*cout << std::to_string(*(BYTE*)(structPointer + 1)) << endl;
-			cout << std::to_string((*(BYTE*)(structPointer + 3)) - 128) << endl;
-			cout << std::to_string((*(BYTE*)(structPointer + 2)) - 128) << endl;
-			cout << std::to_string(*(int*)(structPointer + 16)) << endl;
-			cout << std::to_string(*(int*)(structPointer + 20)) << endl;
-			cout << std::to_string(*(float*)(structPointer + 24)) << endl;
-			cout << std::to_string(*(float*)(structPointer + 28)) << endl;
-			cout << std::to_string(*(float*)(structPointer + 32)) << endl;
-			cout << std::to_string(*(float*)(structPointer + 36)) << endl;
-			cout << std::to_string(*(int*)(structPointer + 44)) << endl;
-			cout << "----------------------------------" << endl;*/
+		 
+			dbgPrint("Set character state"); 
 			break;
 		}
 		case 0xC:
@@ -476,37 +474,18 @@ public:
 		}
 		case 0xE:
 		{
-			dbgPrint("Object change request! TODO!!!!!!");
-			/*cout << *(int*)(structPointer + 4) << endl;
-			cout << *(int*)(structPointer + 20) << endl;*/
+			dbgPrint("Object change request! TODO!!!!!!"); 
 		}
-		case 0x23u:
-			// MemorySerialize((TileExtra *)((char *)this + 12), v61, v7, a4);
+		case 0x23u: 
 			dbgPrint("Got some tile extra information!!! TODO!!!");
 			break;
 		case 3:
-			dbgPrint("Destroyed/placed tile might be tree also!!! TODO!!!");
-			// *(int*)(structPointer + 4) <-- NetID
-			/*cout << std::to_string(*(int*)(structPointer + 44)) << endl;
-			cout << std::to_string(*(int*)(structPointer + 48)) << endl;
-			cout << std::to_string(*(int*)(structPointer + 20)) << endl;*/
-			// <---- 18 at destroy aka fist
-			/*HandlePacketTileChangeRequest(structPointer);*/
+			dbgPrint("Destroyed/placed tile might be tree also!!! TODO!!!"); 
 			break;
 		case 4:
 		{
 			BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
-			world = new WorldStruct;
-			/*for (int i = 0; i < 40000; i++)
-			{
-				cout << std::hex << " " << (int)worldPtr[i];
-			}*/
-			/*ofstream fout;
-			fout.open("file.bin", ios::binary | ios::out);
-
-			fout.write((const char*)worldPtr-120, 60000);
-
-			fout.close();*/
+			world = new WorldStruct; 
 			worldPtr += 6;
 			__int16 strLen = *(__int16 *)worldPtr;
 			worldPtr += 2;
