@@ -31,6 +31,7 @@
 #include "userfunc.h"
 #include "enet/include/enet.h"
 
+#include "proton/rtparam.hpp"
 //#define WORLD_GO
 
 using namespace std;
@@ -195,51 +196,48 @@ void GrowtopiaBot::OnRemove(string data) // "netID|x\n"
 
 void GrowtopiaBot::OnSpawn(string data)
 {
-	std::stringstream ss(data.c_str());
-	std::string to;
-	cout << data;
+	
+	      rtvar var = rtvar::parse(data); 
+	
 	ObjectData objectData;
 	bool actuallyOwner = false;
 
-	while (std::getline(ss, to, '\n')) {
-		string id = to.substr(0, to.find("|"));
-		string act = to.substr(to.find("|") + 1, to.length() - to.find("|") - 1);
-		if (id == "country")
-		{
-			objectData.country = act;
-		}
-		else if (id == "name")
-		{
-			if (stripMessage(act) == ownerUsername) actuallyOwner = true;
-			objectData.name = act;
-		}
-		else if (id == "netID")
-		{
-			if (actuallyOwner) owner = atoi(act.c_str());
-			objectData.netId = atoi(act.c_str());
-		}
-		else if (id == "userID")
-		{
-			objectData.userId = atoi(act.c_str());
-		}
-		else if (id == "posXY")
-		{
-			int x = atoi(act.substr(0, to.find("|")).c_str());
-			int y = atoi(act.substr(act.find("|") + 1, act.length() - act.find("|") - 1).c_str());
-			objectData.x = x;
+	   auto name = var.find("name");
+            auto netid = var.find("netID");
+	
+	
+			objectData.country = var.get("country");
+		 
+			if (stripMessage(var.get("name")) == ownerUsername) actuallyOwner = true;
+			objectData.name = var.get("name");
+		 
+			if (actuallyOwner) owner = var.get_int("netID");
+			objectData.netId = var.get_int("netID");  
+			objectData.userId =  var.get_int("userID");
+		 
+		
+	auto pos = var.find("posXY");
+                    if (pos && pos->m_values.size() >= 2) {
+                        auto x = atoi(pos->m_values[0].c_str());
+                        auto y = atoi(pos->m_values[1].c_str());
+                        //ply.pos = vector2_t{ float(x), float(y) };
+			    objectData.x = x;
 			objectData.y = y;
-		}
-		else if (id == "type")
-		{
-			if (act == "local")
-				objectData.isLocal = true;
-		}
-		else if (act != "0" && (id == "invis" || id == "mstate" || id == "smstate"))
-		{
-			cout << "Some fishy boy is here: " << objectData.name << "; " << objectData.country << "; " << objectData.userId << "; " << objectData.netId << "; " << endl;
+                    }
+	
+	
+	 if (data.find("type|local") != -1) {
+                   objectData.isLocal = true;
+				localx = objectData.x;
+				localy = objectData.y;
+				localnetid = objectData.netId;
+                }
+	 if (var.get("mstate") == "1" || var.get("smstate") == "1" ||var.get("invis")== "1"){
+		 cout << "Some fishy boy is here: " << objectData.name << "; " << objectData.country << "; " << objectData.userId << "; " << objectData.netId << "; " << endl;
 			objectData.isMod = true;
-		}
-	}
+	 }
+	
+	  
 
 	if (actuallyOwner) cout << "Owner netID has been updated to " << objectData.netId << " username is " << ownerUsername;
 	objects.push_back(objectData);
