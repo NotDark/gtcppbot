@@ -1,8 +1,7 @@
 #pragma once
 #include <sstream>
 #include <string>
-#include <vector>
-#include "../utils.h"
+#include <vector> 
 #include <algorithm>
 
 class rtvar {
@@ -115,7 +114,7 @@ class rtvar {
             ret.erase(ret.end());
         return ret;
     }
-    bool validate_ints(std::vector<std::string> vals) {
+ /*   bool validate_ints(std::vector<std::string> vals) {
         for (auto str : vals) {
             auto pair = this->find(str);
             if (!pair)
@@ -132,7 +131,7 @@ class rtvar {
         if (!utils::is_number(pair->m_value))
             return false;
         return true;
-    }
+    }*/
     inline int get_int(const std::string& key) { //this does not chekc if it exists, it assumes validate_ints has been consulated beforehand
         return atoi(find(key)->m_value.c_str());
     }
