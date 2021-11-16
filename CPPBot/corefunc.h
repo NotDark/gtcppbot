@@ -500,7 +500,8 @@ public:
 			break;
 		case 4:
 		{
-			BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
+			//BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
+			BYTE *worldPtr = structPointer + 60;
 			world = new WorldStruct; 
 			worldPtr += 6;
 			__int16 strLen = *(__int16 *)worldPtr;
