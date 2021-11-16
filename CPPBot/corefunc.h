@@ -424,29 +424,32 @@ public:
 		
 		switch (gamepacket->m_type)
 		{
+				
+                case 0: // AvatarPacketReceiver::LerpState
+		{
+			//PlayerMoving *structCahce = unpackPlayerMoving(structPointer);
+			//AtPlayerMoving(structCahce);
+			//free(structCahce);
+			break;
+		}
+				
 		case 1:
 		{
 			handlevarlist(structPointer);
 			break;
 		}
-		case 0x15:
-		{
-			dbgPrint("Ping reply found!");
+				
+					 
+		case 3:
+			dbgPrint("Destroyed/placed tile might be tree also!!! TODO!!!"); 
 			break;
-		}
-		case 0x10:
+				
+		 case 5:
 		{
-			BYTE *itemsData = GetExtendedDataPointerFromTankPacket(structPointer);
-			__int16 val1 = *(__int16 *)itemsData;
-			int itemsCount = *(int *)(itemsData + 2);
-			break;
+			BYTE *tileData = GetExtendedDataPointerFromTankPacket(structPointer);
+			dbgPrint("Update of blocks visuals..");
 		}
-		case 0xF:
-		{
-			HandlePacketTileChangeRequest(structPointer);
-			//cout << *(int*)(structPointer + 4) << endl;
-			break;
-		}
+				
 		case 8:
 		{
 			HandlePacketTileChangeRequest(structPointer);
@@ -460,44 +463,47 @@ public:
 			break;
 		}
 
-		case 5:
-		{
-			BYTE *tileData = GetExtendedDataPointerFromTankPacket(structPointer);
-			dbgPrint("Update of blocks visuals..");
-		}
-		case 0x16:
-		{
-			 
-		}
-		break;
-		case 0x12:
-		{
-			AtAvatarSetIconState(*(int *)(structPointer + 4), *(int *)(structPointer + 44));
-			break;
-		}
-		case 0x14:
-		{
-		 
-			dbgPrint("Set character state"); 
-			break;
-		}
-		case 0xC:
+		 case 12:
 		{
 			string x = std::to_string(*(int *)(structPointer + 44));
 			string y = std::to_string(*(int *)(structPointer + 48));
 			cout << "Some tile change at X:" + x + " Y: " + y << endl;
 			break;
 		}
-		case 0xE:
+				
+				 
+				
+		case 14:
 		{
 			dbgPrint("Object change request! TODO!!!!!!"); 
 		}
-		case 0x23u: 
-			dbgPrint("Got some tile extra information!!! TODO!!!");
+			 
+		case 16:
+		{
+			BYTE *itemsData = GetExtendedDataPointerFromTankPacket(structPointer);
+			__int16 val1 = *(__int16 *)itemsData;
+			int itemsCount = *(int *)(itemsData + 2);
 			break;
-		case 3:
-			dbgPrint("Destroyed/placed tile might be tree also!!! TODO!!!"); 
+		}
+		 
+		case 18:
+		{
+			AtAvatarSetIconState(*(int *)(structPointer + 4), *(int *)(structPointer + 44));
 			break;
+		}
+		case 20:
+		{
+		 
+			dbgPrint("Set character state"); 
+			break;
+		}
+		 
+		 case 22:
+		{
+			dbgPrint("Ping reply found!");
+			break;
+		}
+	 
 		case 4:
 		{
 			//BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
@@ -523,13 +529,7 @@ public:
 			currentWorld = world->name;
 			break;
 		}
-		case 0: // AvatarPacketReceiver::LerpState
-		{
-			PlayerMoving *structCahce = unpackPlayerMoving(structPointer);
-			AtPlayerMoving(structCahce);
-			free(structCahce);
-			break;
-		}
+		 
 		default:
 			dbgPrint("Unknown tank update packet type " + std::to_string(*(char *)structPointer));
 			break;
