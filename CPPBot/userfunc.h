@@ -141,6 +141,8 @@ void GrowtopiaBot::packet_unknown(ENetPacket* packet)
 
 void GrowtopiaBot::OnSendToServer(string address, int port, int userId, int token)
 {
+	address = address.substr(0, address.size()-1); // remove |
+ 
 	login_user = userId;
 	login_token = token;
 	connectClient(address, port);
