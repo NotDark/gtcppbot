@@ -501,7 +501,7 @@ public:
 		case 4:
 		{
 			//BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
-			BYTE *worldPtr = structPointer + 60;
+			BYTE *worldPtr = structPointer + 60; // 4 + 56
 			world = new WorldStruct; 
 			worldPtr += 6;
 			__int16 strLen = *(__int16 *)worldPtr;
