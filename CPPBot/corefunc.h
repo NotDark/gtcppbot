@@ -173,7 +173,7 @@ public:
     memset(&game_packet->m_data + len, 0, 1);
     int code = enet_peer_send(peer, 0, packet);
     if (code != 0)
-        PRINTS("Error sending packet! code: %d\n", code);
+        printf("Error sending packet! code: %d\n", code);
     enet_host_flush(client);
 		
 	}
@@ -343,24 +343,9 @@ public:
 		return (BYTE *)(/*(*(int *)(a1 + 12) << 28 >> 31) & */ (int)(a1 + 56));
 	}
 
-	void HandlePacketTileChangeRequest(BYTE *data)
+	void HandlePacketTileChangeRequest(gameupdatepacket_t*data)
 	{
-		switch ((*(int *)data) - 8)
-		{
-		case 0:
-			AtApplyTileDamage(*(int *)(data + 44), *(int *)(data + 48), *(int *)(data + 20));
-			break;
-		case 4:
-			break;
-		case 7:
-			AtApplyLock(*(int *)(data + 44), *(int *)(data + 48), *(int *)(data + 20));
-			break;
-		default:
-			/*if (*(BYTE *)data != 3)
-				return;
-			AtSetTile(*(int*)(data + 44), *(int*)(data + 48), *(int*)(data + 20));*/
-			break;
-		}
+		
 	}
 
 	struct WorldThingStruct
@@ -452,7 +437,7 @@ public:
 				
 		case 8:
 		{
-			HandlePacketTileChangeRequest(structPointer);
+			HandlePacketTileChangeRequest(gamepacket);
 			//cout << *(int*)(structPointer + 4) << endl;
 			break;
 		}
