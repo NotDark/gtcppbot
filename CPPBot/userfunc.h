@@ -172,28 +172,8 @@ void GrowtopiaBot::OnSetFreezeState(int state)
 
 void GrowtopiaBot::OnRemove(string data) // "netID|x\n"
 {
-	std::stringstream ss(data.c_str());
-	std::string to;
-	int netID = -1;
-	while (std::getline(ss, to, '\n')) {
-		string id = to.substr(0, to.find("|"));
-		string act = to.substr(to.find("|") + 1, to.length() - to.find("|"));
-		if (id == "netID")
-		{
-			netID = atoi(act.c_str());
-		}
-		else {
-			dbgPrint(id + "!!!!!!!!!!!" + act);
-		}
-	}
-	for (ObjectData& objectData : objects)
-	{
-		if (objectData.netId == netID)
-		{
-			objectData.isGone = true;
-		}
-	}
-	//SendPacket(2, "action|input\n|text|Bye bye ::((", peer);
+	rtvar var = rtvar::parse(data)
+	int netid = var.get_int("netID");
 }
 
 void GrowtopiaBot::OnSpawn(string data)
@@ -278,6 +258,7 @@ void GrowtopiaBot::OnTalkBubble(int netID, string bubbleText, int type)
 	if (bubbleText.find("!follow") != string::npos)
 	{
 		isFollowing = true;
+		owner = netid;
 	}
 	if (bubbleText.find("!stop") != string::npos)
 	{
