@@ -504,12 +504,19 @@ public:
 			break;
 		}
 		 
-		 case 22:
-		{
-			dbgPrint("Ping reply found!");
-			break;
-		}
-	 
+		case 22;
+        {
+            gameupdatepacket_t data {};
+                data.m_type = 21;
+                data.m_item = 29657995 ;
+                data.m_int_data = 29657995 ;
+                data.m_vec_x = 64.0;
+                data.m_vec_y = 64.0;
+                data.m_vec2_x = 1000.0;
+                data.m_vec2_y = 250.0;
+            SendPacketNew(4,(uint8_t *)&data, sizeof(gameupdatepacket_t));
+            break;
+        }
 		case 4:
 		{
 			//BYTE *worldPtr = GetExtendedDataPointerFromTankPacket(structPointer); // World::LoadFromMem
