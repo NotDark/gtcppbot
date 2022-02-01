@@ -357,6 +357,22 @@ public:
 				 
 				 SendPacket(2,"action|dialog_return\ndialog_name|captcha_submit\ncaptcha_answer|" + std::to_string(result), peer);
                                    }
+		}else if (action == "onShowCaptcha")
+		{
+			string dialog = varlist[1].get_string();
+			 if (dialog.find("con|big|`wAre you Human?``|left|20") != string::npos)
+                              {
+           replace(dialog,
+        "set_default_color|`o\nadd_label_with_icon|big|`wAre you Human?``|left|206|\nadd_spacer|small|\nadd_textbox|What will be the sum of the following "
+        "numbers|left|\nadd_textbox|",
+        "");
+    replace(dialog, "|left|\nadd_text_input|captcha_answer|Answer:||32|\nend_dialog|captcha_submit||Submit|", "");
+    auto number1 = dialog.substr(0, dialog.find(" +"));
+    auto number2 = dialog.substr(number1.length() + 3, dialog.length());
+    int result = atoi(number1.c_str()) + atoi(number2.c_str());
+				 
+				 SendPacket(2,"action|dialog_return\ndialog_name|captcha_submit\ncaptcha_answer|" + std::to_string(result), peer);
+                                   }
 		}
 	}
  
