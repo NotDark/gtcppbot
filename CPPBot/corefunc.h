@@ -504,7 +504,7 @@ public:
 			break;
 		}
 		 
-		case 22;
+			case 22:
         {
             gameupdatepacket_t data {};
                 data.m_type = 21;
