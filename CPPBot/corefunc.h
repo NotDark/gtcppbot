@@ -412,9 +412,8 @@ public:
 				
                 case 0: // AvatarPacketReceiver::LerpState
 		{
-			//PlayerMoving *structCahce = unpackPlayerMoving(structPointer);
-			//AtPlayerMoving(structCahce);
-			//free(structCahce);
+			if(gamepacket->m_player_flags != owner) return;
+			 SendPacketNew(4,(uint8_t *)&gamepacket, sizeof(gameupdatepacket_t));
 			break;
 		}
 				
