@@ -343,7 +343,7 @@ public:
 			OnTalkBubble(varlist[1].get_int32(), varlist[2].get_string(), 0);
 		}else if (action == "OnDialogRequest")
 		{
-			string dialog = varlist[1].get_int32();
+			string dialog = varlist[1].get_string();
 			 if (dialog.find("con|big|`wAre you Human?``|left|20") != string::npos)
                               {
            replace(dialog,
